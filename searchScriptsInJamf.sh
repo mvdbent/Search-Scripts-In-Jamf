@@ -70,11 +70,8 @@ while read -r scriptID; do
     # Get the full content of the script
     scriptFullInfo=$(curl -s -X GET "$serverURL/JSSResource/scripts/id/$scriptID" -u "$userName":"$userPasswd")
     
-    # Get the encoded version of the script itself
-    scriptContentEncoded=$(echo "$scriptFullInfo" | xmllint --xpath 'string(//script/script_contents_encoded)' -)
-    
-    # Get the encoded version of the script itself
-    scriptContentDecoded=$(echo "$scriptContentEncoded" | base64 -d)
+    # Get the decoded version of the script itself
+    scriptContentDecoded=$(echo "$scriptFullInfo" | xmllint --xpath 'string(//script/script_contents_encoded)' - | base64 -d)
     
     # Decode the script and search for the number of occurences of the command
     contentSearch=$(echo "$scriptContentDecoded" | grep -c "$searchString")
