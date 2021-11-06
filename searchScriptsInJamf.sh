@@ -9,7 +9,7 @@
 # 	Decode the <script_contents_encoded>
 # 	Search the string
 # 	If contains string, get <name>
-# 	Report with script ID and <name>
+#   Report with script ID and <name>
 #   Report with URL to the script in Jamf Pro
 #	Report lines containing the searched value
 
