@@ -29,7 +29,7 @@ Script ID is: 85
 Script URL is: https://foo.jamfcloud.com/view/settings/computer/scripts/85
 Lines that have "dscl": 5 50 63 75 81 97 205 
 
-The script called "FOO - Test iclouddnd" contains 3 occurences of "dscl"
+The script called "FOO - Test iclouddnd" contains 3 occurrences of "dscl"
 Script ID is: 68
 Script URL is: https://foo.jamfcloud.com/view/settings/computer/scripts/68
 Lines that have "dscl": 6 8 105 
