@@ -90,7 +90,7 @@ while read -r scriptID; do
             occurenceName="occurrence"
             lineNumbersName="Line that has"
         else
-            occurenceName="occurrence"
+            occurenceName="occurrences"
             lineNumbersName="Lines that have"
         fi
         
