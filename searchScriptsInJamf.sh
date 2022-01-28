@@ -25,8 +25,21 @@ else
     searchString="$1"
 fi
 
+# Get Jamf Pro version to use token auth if >= 10.35
+jamfProVersion=$(curl -s "$serverURL/JSSCheckConnection" | awk -F"." '{ print $1$2 }')
+
+# Encode username and password to use Basic Authorization
+
+if [[ "$jamfProVersion" -ge 1035 ]]; then
+    bearerTokenFull=$(curl -s -X "POST" "$serverURL/api/v1/auth/token" -H "accept: application/json" -H "Authorization: Basic $encodedAuthorization")
+    bearerToken=$( /usr/bin/awk -F \" '{ print $4 }' <<< "$bearerTokenFull" | head -n 2 | tail -n 1 )
+    authorizationString="Authorization: Bearer $bearerToken"
+else
+    authorizationString="Authorization: Basic $encodedAuthorization"
+fi
+
 # Get a list of all the scripts
-allScripts=$(curl -s -X GET "$serverURL/JSSResource/scripts" -H "accept: application/xml" -u "$userName":"$userPasswd")
+allScripts=$(curl -s -X GET "$serverURL/JSSResource/scripts" -H "accept: application/xml" -H "$authorizationString")
 
 if [[ $(echo "$allScripts" | grep -ic "xml") -eq 0 ]] ; then
     echo "It seems we cannot get data from your server, please check the variables in your script or the credentials used"
@@ -68,7 +81,7 @@ echo ""
 while read -r scriptID; do
     
     # Get the full content of the script
-    scriptFullInfo=$(curl -s -X GET "$serverURL/JSSResource/scripts/id/$scriptID" -u "$userName":"$userPasswd")
+    scriptFullInfo=$(curl -s -X GET "$serverURL/JSSResource/scripts/id/$scriptID" -H "$authorizationString")
     
     # Get the decoded version of the script itself
     scriptContentDecoded=$(echo "$scriptFullInfo" | xmllint --xpath 'string(//script/script_contents_encoded)' - | base64 -d)
