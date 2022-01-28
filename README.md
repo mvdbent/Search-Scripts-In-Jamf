@@ -1,6 +1,6 @@
 # Search-Scripts-In-Jamf
 
-This script is designed to search for a string in all the scripts in your Jamf Pro instance. It will use the Jamf Pro Classic API to get the list of scripts and iterate through all of them to find the string you’re looking for. The result will show the number of scripts containing the string but also for each script the lines and the URL and ID of the script in Jamf Pro.
+This script is designed to search for a string in all the scripts and or extension attributes in your Jamf Pro instance. It will use the Jamf Pro Classic API to get the list of scripts and iterate through all of them to find the string you’re looking for. The result will show the number of scripts or extension attributes (or both if you use the combined script) containing the string but also for each script the lines and the URL and ID of the element in Jamf Pro.
 
 ## General Requirements:
 
