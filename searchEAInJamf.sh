@@ -29,6 +29,7 @@ fi
 jamfProVersion=$(curl -s "$serverURL/JSSCheckConnection" | awk -F"." '{ print $1$2 }')
 
 # Encode username and password to use Basic Authorization
+encodedAuthorization=$(echo -n "$userName:$userPasswd" | /usr/bin/iconv -t ISO-8859-1 | base64)
 
 if [[ "$jamfProVersion" -ge 1035 ]]; then
     bearerTokenFull=$(curl -s -X "POST" "$serverURL/api/v1/auth/token" -H "accept: application/json" -H "Authorization: Basic $encodedAuthorization")
