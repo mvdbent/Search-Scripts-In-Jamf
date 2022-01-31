@@ -109,9 +109,9 @@ while read -r extensionAttributeID; do
         fi
         
         # Let's tell you what we found
-        echo "The script called \"$extensionAttributeName\" contains $extensionAttributeContentSearch $occurenceName of \"$searchString\""
-        echo "Script ID is: $extensionAttributeID"
-        echo "Script URL is: $serverURL/computerExtensionAttributes.html?id=$extensionAttributeID"
+        echo "The extension attribute called \"$extensionAttributeName\" contains $extensionAttributeContentSearch $occurenceName of \"$searchString\""
+        echo "EXtention attribute ID is: $extensionAttributeID"
+        echo "Extension attribute URL is: $serverURL/computerExtensionAttributes.html?id=$extensionAttributeID"
         echo "$lineNumbersName \"$searchString\": $extensionAttributeLineNumbers"
         echo ""
         
