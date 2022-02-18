@@ -25,7 +25,7 @@ else
     searchString="$1"
 fi
 
-# Get Jamf Pro version to use token auth if >= 10.35
+## Get Jamf Pro version to use token auth if >= 10.35
 jamfProVersion=$(curl -s "$serverURL/JSSCheckConnection" | awk -F"." '{ print $1$2 }')
 
 # Encode username and password to use Basic Authorization
@@ -60,6 +60,8 @@ XSLT='<?xml version="1.0" encoding="UTF-8"?>
 </xsl:template>
 </xsl:stylesheet>'
 
+countScriptsTMP=0
+
 getScriptsContent () {
 
     # Inform you
@@ -70,14 +72,14 @@ getScriptsContent () {
     while read -r scriptID; do
         
         # Get the full content of the script
-        scriptFullInfo=$(curl -s -X GET "$serverURL/JSSResource/scripts/id/$scriptID" -H "$ authorizationString")
+        scriptFullInfo=$(curl -s -X GET "$serverURL/JSSResource/scripts/id/$scriptID" -H "$authorizationString")
         
         # Get the decoded version of the script itself
-        scriptContentDecoded=$(echo "$scriptFullInfo" | xmllint --xpath 'string(//script/   script_contents_encoded)' - | base64 -d)
+        scriptContentDecoded=$(echo "$scriptFullInfo" | xmllint --xpath 'string(//script/script_contents_encoded)' - | base64 -d)
         
         # Decode the script and search for the number of occurrences of the command
         contentSearch=$(echo "$scriptContentDecoded" | grep -c "$searchString")
-        
+
         # If there is at least 1 occurrences of the command, let's go
         if [[ "$contentSearch" -gt 0 ]]; then
             
@@ -96,16 +98,24 @@ getScriptsContent () {
                 lineNumbersName="Lines that have"
             fi
             
-            # Let's tell you what we found
-            echo "The script called \"$scriptName\" contains $contentSearch $occurenceName of \"$   searchString\""
-            echo "Script ID is: $scriptID"
-            echo "Script URL is: $serverURL/view/settings/computer/scripts/$scriptID"
-            echo "$lineNumbersName \"$searchString\": $lineNumbers"
-            echo ""
+                # Let's tell you what we found
+                echo "The script called \"$scriptName\" contains $contentSearch $occurenceName of \"$searchString\""
+                echo "Script ID is: $scriptID"
+                echo "Script URL is: $serverURL/view/settings/computer/scripts/$scriptID"
+                echo "$lineNumbersName \"$searchString\": $lineNumbers"
+                echo ""
+
+                ((countScriptsTMP++))
             
         fi
         
     done <<< "$allScriptsID"
+
+    if [[ "$countScriptsTMP" == 1 ]]; then
+        countScriptsName="script"
+    else
+        countScriptsName="scripts"
+    fi
 
 }
 
@@ -118,11 +128,11 @@ countScripts=$(echo "$allScripts" | xmllint --xpath '/scripts/size/text()' -)
 if [[ "$countScripts" == 0 ]]; then
     echo "You don't have any scripts in your Jamf Pro instance or we cannot connect, good bye"
     #exit 0
-elif [[ "$countScripts" == 1 ]]; then
-    countScriptsName="script"
-    getScriptsContent
+# elif [[ "$countScripts" == 1 ]]; then
+#     countScriptsName="script"
+#     getScriptsContent
 else
-    countScriptsName="scripts"
+    #countScriptsName="scripts"
     getScriptsContent
 fi
 
@@ -151,6 +161,8 @@ XSLT='<?xml version="1.0" encoding="UTF-8"?>
 </xsl:template>
 </xsl:stylesheet>'
 
+countEAsNameTMP=0
+
 getEAsContent () {
 
     # Inform you
@@ -167,8 +179,8 @@ getEAsContent () {
         extensionAttributeContentDecoded=$(echo "$extensionAttributeFullInfo" | xmllint --xpath '   string(//computer_extension_attribute/input_type/script)' -)
         
         # Decode the script and search for the number of occurrences of the command
-        extensionAttributeContentSearch=$(echo "$extensionAttributeContentDecoded" | grep -c "$ searchString")
-        
+        extensionAttributeContentSearch=$(echo "$extensionAttributeContentDecoded" | grep -c "$searchString")
+
         # If there is at least 1 occurrences of the command, let's go
         if [[ "$extensionAttributeContentSearch" -gt 0 ]]; then
             
@@ -176,7 +188,7 @@ getEAsContent () {
             extensionAttributeName=$(echo "$extensionAttributeFullInfo" | xmllint --xpath ' string(//computer_extension_attribute/name)' -)
             
             # Get line numbers showing the searched string, all in one line, separated with spaces
-            extensionAttributeLineNumbers=$(echo "$extensionAttributeContentDecoded" | grep -n "$   searchString" | awk -F":" '{ print $1 }' | tr '\n' ' ')
+            extensionAttributeLineNumbers=$(echo "$extensionAttributeContentDecoded" | grep -n "$searchString" | awk -F":" '{ print $1 }' | tr '\n' ' ')
             
             # If more than 0, get the correct plural version if needed
             if [[ "$extensionAttributeContentSearch" == 1 ]]; then
@@ -187,16 +199,24 @@ getEAsContent () {
                 lineNumbersName="Lines that have"
             fi
             
-            # Let's tell you what we found
-            echo "The extension attribute called \"$extensionAttributeName\" contains $ extensionAttributeContentSearch $occurenceName of \"$searchString\""
-            echo "EXtention attribute ID is: $extensionAttributeID"
-            echo "Extension attribute URL is: $serverURL/computerExtensionAttributes.html?id=$  extensionAttributeID"
-            echo "$lineNumbersName \"$searchString\": $extensionAttributeLineNumbers"
-            echo ""
-            
+                # Let's tell you what we found
+                echo "The extension attribute called \"$extensionAttributeName\" contains $ extensionAttributeContentSearch $occurenceName of \"$searchString\""
+                echo "EXtention attribute ID is: $extensionAttributeID"
+                echo "Extension attribute URL is: $serverURL/computerExtensionAttributes.html?id=$extensionAttributeID"
+                echo "$lineNumbersName \"$searchString\": $extensionAttributeLineNumbers"
+                echo ""
+                
+                ((countEAsNameTMP++))
+
         fi
         
     done <<< "$allEAsID"
+
+    if [[ "$countEAsNameTMP" == 1 ]]; then
+        countEAsName="extension attribute"
+    else
+        countEAsName="extension attributes"
+    fi
 
 }
 
@@ -208,12 +228,11 @@ countEAs=$(echo "$allEAs" | xmllint --xpath '/computer_extension_attributes/size
 # If more than 0, get the correct plural version if needed
 if [[ "$countEAs" == 0 ]]; then
     echo "You don't have any extension attributes in your Jamf Pro instance or we cannot connect, good bye"
-    exit 0
-elif [[ "$countEAs" == 1 ]]; then
-    countEAsName="extension attribute"
-    getEAsContent
+# elif [[ "$countEAs" == 1 ]]; then
+#     countEAsName="extension attribute"
+#     getEAsContent
 else
-    countEAsName="extension attributes"
+    #countEAsName="extension attributes"
     getEAsContent
 fi
 
