@@ -60,9 +60,14 @@ XSLT='<?xml version="1.0" encoding="UTF-8"?>
 </xsl:template>
 </xsl:stylesheet>'
 
-countScriptsTMP=0
 
 getScriptsContent () {
+
+    if [[ "$countScripts" == 1 ]]; then
+        countScriptsName="script"
+    else
+        countScriptsName="scripts"
+    fi
 
     # Inform you
     echo "You have $countScripts $countScriptsName in your instance of Jamf Pro"
@@ -104,18 +109,10 @@ getScriptsContent () {
                 echo "Script URL is: $serverURL/view/settings/computer/scripts/$scriptID"
                 echo "$lineNumbersName \"$searchString\": $lineNumbers"
                 echo ""
-
-                ((countScriptsTMP++))
             
         fi
         
     done <<< "$allScriptsID"
-
-    if [[ "$countScriptsTMP" == 1 ]]; then
-        countScriptsName="script"
-    else
-        countScriptsName="scripts"
-    fi
 
 }
 
@@ -161,9 +158,14 @@ XSLT='<?xml version="1.0" encoding="UTF-8"?>
 </xsl:template>
 </xsl:stylesheet>'
 
-countEAsNameTMP=0
 
 getEAsContent () {
+
+    if [[ "$countEAs" == 1 ]]; then
+        countEAsName="extension attribute"
+    else
+        countEAsName="extension attributes"
+    fi
 
     # Inform you
     echo "You have $countEAs $countEAsName in your instance of Jamf Pro"
@@ -206,17 +208,9 @@ getEAsContent () {
                 echo "$lineNumbersName \"$searchString\": $extensionAttributeLineNumbers"
                 echo ""
                 
-                ((countEAsNameTMP++))
-
         fi
         
     done <<< "$allEAsID"
-
-    if [[ "$countEAsNameTMP" == 1 ]]; then
-        countEAsName="extension attribute"
-    else
-        countEAsName="extension attributes"
-    fi
 
 }
 
