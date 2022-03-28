@@ -16,6 +16,10 @@ Before using the script, there are 3 variables to modify to suit your needs:
 Don’t forget to make the script executable: 
 `chmod u+x /path/to/searchScriptsInJamf.sh`
 
+***Warning***
+The script will not work if you try to launch it using `sh /path/to/searchScriptsInJamf.sh`
+Either make it executable or use `bash /path/to/searchScriptsInJamf.sh`
+
 ## Usage
 
 Simply execute the script with one parameter being the string you’re looking for. If you don’t have a parameter, the script will search for the occurrences of `python`:
