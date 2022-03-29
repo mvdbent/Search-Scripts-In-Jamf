@@ -20,7 +20,7 @@ userPasswd="foo"
 
 # Check if the script is launched with sh, if yes, output some text and exit
 runningShell=$(ps -hp $$ | tail -n 1 | awk '{ print $4}')
-scriptName=$(echo $0)
+scriptName=$(echo "$0")
 
 if [[ "$runningShell" == "sh" ]]; then
     echo "You seem to be running this script using: sh $scriptName"
