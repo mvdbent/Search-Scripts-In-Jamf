@@ -18,6 +18,19 @@ serverURL="https://foo.jamfcloud.com"       # i.e.: https://server.domain.tld:po
 userName="foo"                      # it is recommended to create a dedicated read-only user that has read-only access to scripts
 userPasswd="foo"
 
+# Check if the script is launched with sh, if yes, output some text and exit
+runningShell=$(ps -hp $$ | tail -n 1 | awk '{ print $4}')
+scriptName=$(echo $0)
+
+if [[ "$runningShell" == "sh" ]]; then
+    echo "You seem to be running this script using: sh $scriptName"
+    echo "Please either make it executable with 'chmod u+x $scriptName' and then run './$scriptName'"
+    echo "or use 'bash $scriptName'"
+    echo "This script does not run well with sh"
+    echo "Sorry for the invonvenience"
+    exit 0
+fi
+
 # Check if something is passed as an argument. If nothing is passed, search for python
 if [[ "$1" == "" ]]; then
     searchString="python"
