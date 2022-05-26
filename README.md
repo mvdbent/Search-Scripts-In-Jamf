@@ -13,6 +13,8 @@ Before using the script, there are 3 variables to modify to suit your needs:
 - `userName` to give the name of the account used to authenticate and access the scripts. As mentioned previously, it is recommended to have a dedicated account for that as the credentials will be in the script in plain text (even if mostly that script will be executed from an admin computer)
 - `userPasswd` to give the password of the account
 
+You can also execute the script and if you didn't fill the variables, it will ask for the relevant informations (URL, username and password)
+
 Don’t forget to make the script executable: 
 `chmod u+x /path/to/searchScriptsInJamf.sh`
 
@@ -22,7 +24,7 @@ Either make it executable or use `bash /path/to/searchScriptsInJamf.sh`
 
 ## Usage
 
-Simply execute the script with one parameter being the string you’re looking for. If you don’t have a parameter, the script will search for the occurrences of `python`:
+Simply execute the script with one parameter being the string you’re looking for. If you don’t have a parameter, the script will ask you for one and if you don't enter anything it will search for the occurrences of `python`:
 
 ```/path/to/searchScriptsInJamf.sh "dscl"
 You have 12 scripts in your instance of Jamf Pro

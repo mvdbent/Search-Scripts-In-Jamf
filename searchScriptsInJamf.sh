@@ -14,9 +14,34 @@
 #	Report lines containing the searched value
 
 # Please change the variables according to your needs
-serverURL="https://foo.jamfcloud.com"		# i.e.: https://server.domain.tld:port or https://instance.jamfcloud.com
-userName="foo"						# it is recommended to create a dedicated read-only user that has read-only access to scripts
-userPasswd="foo"
+serverURL=""		# i.e.: https://server.domain.tld:port or https://instance.jamfcloud.com
+userName=""						# it is recommended to create a dedicated read-only user that has read-only access to scripts
+userPasswd=""
+
+# If the variables are not modified, let's ask for information directly
+if [[ -z "$serverURL" ]]; then
+    echo "Please enter your Jamf Pro URL (include https:// and :port if needed)"
+    read -r serverURL
+fi
+
+# This one is to remove the / at the end of the URL if it exists
+strLen=$((${#serverUrl}-1))
+lastChar="${serverUrl:$strLen:1}"
+if [ "$lastChar" = "/" ];then
+    serverUrl=${serverUrl%?}
+fi
+
+# If the variables are not modified, let's ask for information directly
+if [[ -z "$userName" ]]; then
+    echo "Please enter your Jamf Pro username"
+    read -r userName
+fi
+
+# If the variables are not modified, let's ask for information directly
+if [[ -z "$userPasswd" ]]; then
+    echo "Please enter your Jamf Pro password"
+    read -rs userPasswd
+fi
 
 # Check if the script is launched with sh, if yes, output some text and exit
 runningShell=$(ps -hp $$ | tail -n 1 | awk '{ print $4}')
@@ -31,12 +56,17 @@ if [[ "$runningShell" == "sh" ]]; then
     exit 0
 fi
 
-# Check if something is passed as an argument. If nothing is passed, search for python
-if [[ "$1" == "" ]]; then
-    searchString="python"
+# Let's ask for the search string if nothing is passed as an argument
+if [ -z "$1" ]; then
+    echo "What string do you want to search in your scripts (press Enter to search for python)"
+    read -r searchString
+    if [ -z "$searchString" ]; then
+        searchString="python"
+    fi
 else
     searchString="$1"
 fi
+
 
 # Get Jamf Pro version to use token auth if >= 10.35
 jamfProVersion=$(curl -s "$serverURL/JSSCheckConnection" | awk -F"." '{ print $1$2 }')
