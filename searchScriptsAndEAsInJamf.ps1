@@ -109,7 +109,7 @@ Function CatchInvokeRestMethodErrors {
 }
 
 # Get Jamf Pro version to use token auth if >= 10.35
-$jamfProVersion = (Invoke-RestMethod $serverURL/JSSCheckConnection | %{$_.Split(".")[0,1]}) -join ""
+$jamfProVersion = ((Invoke-RestMethod $serverURL/JSSCheckConnection).Split(".")[0,1]) -join ""
 
 # Prepare for token acquisition
 $combineCreds = "$($userName):$($userPasswd)"
