@@ -67,6 +67,9 @@ else
     searchString="$1"
 fi
 
+# Make an empty line
+echo ""
+
 ## Get Jamf Pro version to use token auth if >= 10.35
 jamfProVersion=$(curl -s "$serverURL/JSSCheckConnection" | awk -F"." '{ print $1$2 }')
 
@@ -244,7 +247,7 @@ getEAsContent () {
             fi
             
                 # Let's tell you what we found
-                echo "The extension attribute called \"$extensionAttributeName\" contains $ extensionAttributeContentSearch $occurenceName of \"$searchString\""
+                echo "The extension attribute called \"$extensionAttributeName\" contains $extensionAttributeContentSearch $occurenceName of \"$searchString\""
                 echo "EXtention attribute ID is: $extensionAttributeID"
                 echo "Extension attribute URL is: $serverURL/computerExtensionAttributes.html?id=$extensionAttributeID"
                 echo "$lineNumbersName \"$searchString\": $extensionAttributeLineNumbers"
