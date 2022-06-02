@@ -20,36 +20,34 @@ Clear-Host
 
 # Removes last / in URL if added, not a blocker, just an esthetical issue if displaying URLs
 If ( $serverURL -match '\/$' ) {
-
     $serverURL = $serverURL -replace ".$"
-
 }
 
 If ( [string]::IsNullOrEmpty($serverURL) ) {
-        Write-Host "We don't have a serverURL..."
-        Write-Host "Please enter your Jamf Pro URL (include https:// and :port if needed)" -ForegroundColor Green
-        $serverUrl = Read-Host
+    Write-Host "We don't have a serverURL..."
+    Write-Host "Please enter your Jamf Pro URL (include https:// and :port if needed): " -NoNewline -ForegroundColor Green
+    $serverUrl = Read-Host
 
-        Write-Host "The URL you typed is: $serverURL"
+    Write-Host "The URL you typed is: $serverURL"
 }
 
 If ( [string]::IsNullOrEmpty($userName) ) {
-        Write-Host "We don't have a username..."
-        Write-Host "Please enter your Jamf Pro username" -ForegroundColor Green
-        $userName = Read-Host
+    Write-Host "We don't have a username..."
+    Write-Host "Please enter your Jamf Pro username: " -NoNewline -ForegroundColor Green
+    $userName = Read-Host
 
-        Write-Host "The username you typed is: $userName"
+    Write-Host "The username you typed is: $userName"
 }
 
 
 If ( [string]::IsNullOrEmpty($userPasswd) ) {
-        Write-Host "We don't have a password..."
-        Write-Host "Please enter your Jamf Pro password" -ForegroundColor Green
-        # asks securely
-        $userPasswdSecured = Read-Host -AsSecureString
-        $userPasswd = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($userPasswdSecured))
+    Write-Host "We don't have a password..."
+    Write-Host "Please enter your Jamf Pro password: " -NoNewline -ForegroundColor Green
+    # asks securely
+    $userPasswdSecured = Read-Host -AsSecureString
+    $userPasswd = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($userPasswdSecured))
 
-        Write-Host "The password you typed is: NO, I won't show..."
+    Write-Host "The password you typed is: NO, I won't show..."
 }
 
 # Let's ask for the search string
@@ -115,7 +113,7 @@ Function CatchInvokeRestMethodErrors {
 }
 
 # Get Jamf Pro version to use token auth if >= 10.35
-$jamfProVersion = ((Invoke-RestMethod $serverURL/JSSCheckConnection).Split(".")[0,1]) -join ""
+$jamfProVersion = ((CatchInvokeRestMethodErrors -uri $serverURL/JSSCheckConnection -Method GET -Authorization "foo" -accept "*/*").Split(".")[0,1]) -join ""
 
 # Prepare for token acquisition
 $combineCreds = "$($userName):$($userPasswd)"
@@ -139,7 +137,7 @@ If ( $jamfProVersion -ge 1035) {
     $authorizationString = "Bearer $bearerToken"
 } else {
     # Create Authorization String for Basic
-    $authorizationString = "Basic $EncodeCreds"
+    $authorizationString = $basicAuthValue
 }
 
 ###################################################################################
