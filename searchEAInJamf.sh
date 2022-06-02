@@ -19,7 +19,7 @@ userPasswd=""
 
 # If the variables are not modified, let's ask for information directly
 if [[ -z "$serverURL" ]]; then
-    echo "Please enter your Jamf Pro URL (include https:// and :port if needed)"
+    echo -e "Please enter your Jamf Pro URL (include https:// and :port if needed): \c"
     read -r serverURL
 fi
 
@@ -32,14 +32,15 @@ fi
 
 # If the variables are not modified, let's ask for information directly
 if [[ -z "$userName" ]]; then
-    echo "Please enter your Jamf Pro username"
+    echo -e "Please enter your Jamf Pro username: \c"
     read -r userName
 fi
 
 # If the variables are not modified, let's ask for information directly
 if [[ -z "$userPasswd" ]]; then
-    echo "Please enter your Jamf Pro password"
+    echo -e "Please enter your Jamf Pro password: \c"
     read -rs userPasswd
+    echo ""
 fi
 
 # Check if the script is launched with sh, if yes, output some text and exit
@@ -57,7 +58,7 @@ fi
 
 # Let's ask for the search string if nothing is passed as an argument
 if [ -z "$1" ]; then
-    echo "What string do you want to search in your scripts (press Enter to search for python)"
+    echo -e "What string do you want to search in your scripts (press Enter to search for python): \c"
     read -r searchString
     if [ -z "$searchString" ]; then
         searchString="python"

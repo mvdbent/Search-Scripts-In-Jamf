@@ -10,6 +10,8 @@
 #   Report with URL to the extension attributes in Jamf Pro
 #   Report lines containing the searched value
 
+param([String]$searchString) 
+
 # Please change the variables according to your needs
 $serverURL = ""     # i.e.: https://server.domain.tld:port or https://instance.jamfcloud.com
 $userName = ""                      # it is recommended to create a dedicated read-only user that has read-only access to scripts
@@ -26,18 +28,17 @@ If ( [string]::IsNullOrEmpty($serverURL) ) {
     Write-Host "We don't have a serverURL..."
     Write-Host "Please enter your Jamf Pro URL (include https:// and :port if needed): " -NoNewline -ForegroundColor Green
     $serverUrl = Read-Host
-
     Write-Host "The URL you typed is: $serverURL"
+    Write-Host
 }
 
 If ( [string]::IsNullOrEmpty($userName) ) {
     Write-Host "We don't have a username..."
     Write-Host "Please enter your Jamf Pro username: " -NoNewline -ForegroundColor Green
     $userName = Read-Host
-
     Write-Host "The username you typed is: $userName"
+    Write-Host
 }
-
 
 If ( [string]::IsNullOrEmpty($userPasswd) ) {
     Write-Host "We don't have a password..."
@@ -45,26 +46,28 @@ If ( [string]::IsNullOrEmpty($userPasswd) ) {
     # asks securely
     $userPasswdSecured = Read-Host -AsSecureString
     $userPasswd = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($userPasswdSecured))
-
     Write-Host "The password you typed is: NO, I won't show..."
+    Write-Host
 }
 
-# Let's ask for the search string
-Write-Host "What string do you want to search in your scripts (press Enter to search for python): " -NoNewLine -ForegroundColor Green
-$searchString = Read-Host
-
-# If user does not enter anything, we search for python
+# Let's ask for the search string if it's not passed as a parameter
 If ( [string]::IsNullOrEmpty($searchString) ) {
-    $searchString = "python"
+    Write-Host "We don't have a search string..."
+    Write-Host "What string do you want to search in your scripts (press Enter to search for python): " -NoNewLine -ForegroundColor Green
+    $searchString = Read-Host
+
+    # If user does not enter anything, we search for python
+    If ( [string]::IsNullOrEmpty($searchString) ) {
+        $searchString = "python"
+    }
+    Write-Host "The search string is: $searchString"
+    Write-Host
 }
 
-Write-Host "The search string is: $searchString"
-Write-Host
-
+# Function to get info from Jamf and catch errors cleanly
 Function CatchInvokeRestMethodErrors {
     Param
     (
-        #Parameters
         [Parameter(
             Mandatory = $true,
             ValueFromPipelineByPropertyName = $true,
@@ -90,7 +93,6 @@ Function CatchInvokeRestMethodErrors {
             HelpMessage = "accept",
             Position = 0)]
         [String]$accept
-        
     )
 
     Try {

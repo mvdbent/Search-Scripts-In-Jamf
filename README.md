@@ -1,10 +1,14 @@
 # New
 
-Powershell version if you want to test from a windows computer. This Powershell version does not support passing the searched string as an argument, you will have to enter it at script execution (and if you hit enter, python is the default).
+Powershell version if you want to test from a windows computer.
+
+If no variables are set in the script, you will be asked for the information.
 
 # Search-Scripts-In-Jamf
 
 This script is designed to search for a string in all the scripts and or extension attributes in your Jamf Pro instance. It will use the Jamf Pro Classic API to get the list of scripts and iterate through all of them to find the string you’re looking for. The result will show the number of scripts or extension attributes (or both if you use the combined script) containing the string but also for each script the lines and the URL and ID of the element in Jamf Pro.
+
+***If multiple strings are passed as argument, only the first one is searched, others are ignored.***
 
 ## General Requirements:
 
@@ -19,18 +23,20 @@ Before using the script, there are 3 variables to modify to suit your needs:
 
 You can also execute the script and if you didn't fill the variables, it will ask for the relevant informations (URL, username and password)
 
-Don’t forget to make the script executable: 
+Don’t forget to make the script executable on macOS on unix: 
 `chmod u+x /path/to/searchScriptsInJamf.sh`
 
 ***Warning***
-The script will not work if you try to launch it using `sh /path/to/searchScriptsInJamf.sh`
+The shell script will not work if you try to launch it using `sh /path/to/searchScriptsInJamf.sh`
 Either make it executable or use `bash /path/to/searchScriptsInJamf.sh`
 
 ## Usage
 
 Simply execute the script with one parameter being the string you’re looking for. If you don’t have a parameter, the script will ask you for one and if you don't enter anything it will search for the occurrences of `python`:
 
-```/path/to/searchScriptsInJamf.sh "dscl"
+- macOS or unix:
+```
+/path/to/searchScriptsInJamf.sh dscl
 You have 12 scripts in your instance of Jamf Pro
 We are looking for: dscl
 
@@ -52,3 +58,30 @@ Line that has "dscl": 51
 
 Search is finished, happy scripts reviewing
 ```
+
+- Windows
+```
+\path\to\searchScriptsInJamf.ps1 -searchString dscl
+You have 12 scripts in your instance of Jamf Pro
+We are looking for: dscl
+
+The script called "FOO - fv2" contains 7 occurrences of "dscl"
+Script ID is: 85
+Script URL is: https://foo.jamfcloud.com/view/settings/computer/scripts/85
+Lines that have "dscl": 5 50 63 75 81 97 205 
+
+The script called "FOO - Test iclouddnd" contains 3 occurrences of "dscl"
+Script ID is: 68
+Script URL is: https://foo.jamfcloud.com/view/settings/computer/scripts/68
+Lines that have "dscl": 6 8 105 
+
+The script called "Admin Temp" contains 1 occurrence of "dscl"
+Script ID is: 31
+Script URL is: https://foo.jamfcloud.com/view/settings/computer/scripts/31
+Line that has "dscl": 51 
+
+
+Search is finished, happy scripts reviewing
+```
+
+You can also use:  `\path\to\searchScriptsInJamf.ps1 dscl`
