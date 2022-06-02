@@ -23,7 +23,11 @@ Before using the script, there are 3 variables to modify to suit your needs:
 - `userName` to give the name of the account used to authenticate and access the scripts. As mentioned previously, it is recommended to have a dedicated account for that as the credentials will be in the script in plain text (even if mostly that script will be executed from an admin computer)
 - `userPasswd` to give the password of the account
 
-You can also execute the script and if you didn't fill the variables, it will ask for the relevant informations (URL, username and password)
+You can also execute the script and if you didn't fill the variables, it will ask for the relevant informations (URL, username and password).
+
+***Tip***
+You can leave any of the variables empty, for example `userPasswd`, the script will ask you interactively for the missing information at execution.
+If a variable is filled, the information is used directly and you're not asked for it during execution.
 
 Don’t forget to make the script executable on macOS on unix: 
 `chmod u+x /path/to/searchScriptsInJamf.sh`
