@@ -18,6 +18,13 @@ $userPasswd = ""
 
 Clear-Host
 
+# Removes last / in URL if added, not a blocker, just an esthetical issue if displaying URLs
+If ( $serverURL -match '\/$' ) {
+
+    $serverURL = $serverURL -replace ".$"
+
+}
+
 If ( [string]::IsNullOrEmpty($serverURL) ) {
         Write-Host "We don't have a serverURL..."
         Write-Host "Please enter your Jamf Pro URL (include https:// and :port if needed)" -ForegroundColor Green

@@ -15,8 +15,14 @@ $serverURL = ""     # i.e.: https://server.domain.tld:port or https://instance.j
 $userName = ""                      # it is recommended to create a dedicated read-only user that has read-only access to scripts
 $userPasswd = ""
 
-
 Clear-Host
+
+# Removes last / in URL if added, not a blocker, just an esthetical issue if displaying URLs
+If ( $serverURL -match '\/$' ) {
+
+    $serverURL = $serverURL -replace ".$"
+
+}
 
 If ( [string]::IsNullOrEmpty($serverURL) ) {
         Write-Host "We don't have a serverURL..."
